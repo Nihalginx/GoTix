@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Booking - Ticket Booking</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .booking-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      align-items: start;
+    }
+    .passenger-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      margin-top: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    @media (max-width: 768px) {
+      .booking-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="site-header">
+    <a href="/index.html" class="brand">
+      Ticket Booking
+    </a>
+    <nav class="site-nav">
+      <a href="/index.html">Book Transport</a>
+      <a href="/search.html">Explore Trips</a>
+      <a href="/my-bookings.html">My Bookings</a>
+      <div class="nav-auth" id="navAuth">
+        <!-- Injected dynamically by api.js -->
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <div style="margin-bottom: 16px;">
+      <a href="/search.html" style="font-size: 13px; color: var(--text-muted);">&larr; Back to Trip Results</a>
+      <h1 style="font-size: 18px; font-weight: 700; margin-top: 6px;">Passenger & Seat Selection</h1>
+    </div>
+
+    <div id="bookingAlert" class="form-msg"></div>
+
+    <div class="booking-grid">
+
+      <!-- Left Column: Passenger details and Seat/Quantity selection -->
+      <div>
+
+        <!-- Trip Summary Banner -->
+        <div class="card" id="tripSummaryCard">
+          <div style="color: var(--text-muted); text-align: center; padding: 20px;">
+            Loading trip details...
+          </div>
+        </div>
+
+        <!-- Seat Selection or Quantity Selector Card -->
+        <div class="card" id="selectionCard">
+          <div class="card-header">
+            <h2 class="card-title" id="selectionTitle">Select Your Seats</h2>
+            <span class="card-subtitle" id="selectionSubtitle">Interactive Seat Map</span>
+          </div>
+
+          <!-- Dynamic Container for Seat Grid or Quantity Selector -->
+          <div id="selectionContainer">
+            <!-- Injected by booking.js -->
+          </div>
+        </div>
+
+        <!-- Passenger Details Card -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Passenger Information</h2>
+            <span class="card-subtitle">Required for ticketing records</span>
+          </div>
+
+          <div id="passengerInputsContainer">
+            <!-- Dynamically populated passenger name fields -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Price Summary and Confirmation -->
+      <aside>
+        <div class="card" style="position: sticky; top: 20px;">
+          <h2 class="card-title" style="margin-bottom: 14px; font-size: 15px;">Fare Summary (INR)</h2>
+
+          <div class="summary-line">
+            <span style="color: var(--text-muted);">Base Fare per ticket/unit:</span>
+            <span id="summaryBasePrice">₹0</span>
+          </div>
+
+          <div class="summary-line">
+            <span style="color: var(--text-muted);">Quantity / Seats:</span>
+            <span id="summaryQuantity">1</span>
+          </div>
+
+          <div class="summary-line">
+            <span style="color: var(--text-muted);">Selected Seats:</span>
+            <span id="summarySeatList" style="font-weight: 600;">1A</span>
+          </div>
+
+          <div class="summary-line">
+            <span style="color: var(--text-muted);">Taxes & Fees:</span>
+            <span>₹0 (Included)</span>
+          </div>
+
+          <div class="summary-total">
+            <span>Total Payable:</span>
+            <span id="summaryTotalPrice" style="color: var(--accent);">₹0</span>
+          </div>
+
+          <div style="margin-top: 18px;">
+            <button id="confirmBookingBtn" class="btn btn-primary" style="width: 100%; padding: 10px;">
+              Confirm & Book Ticket
+            </button>
+            <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px; text-align: center;">
+              This updates <code>trips.seats_available</code> and creates a <code>bookings</code> record atomically.
+            </p>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+
+  </main>
+
+  <!-- Plain Clean Footer -->
+  <footer class="site-footer">
+    <div>
+      <strong>Ticket Booking</strong> &copy; 2026. Hand-built transport ticketing system with SQLite & FastAPI.
+    </div>
+    <div>
+      <a href="/admin/dashboard.html">Admin Monitor</a>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/booking.js"></script>
+</body>
+</html>

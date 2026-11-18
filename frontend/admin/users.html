@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users Directory - Ticket Booking Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="admin-wrapper">
+
+    <!-- Shared Left Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <h2>Ticket Booking</h2>
+        <p>Database Monitor & Admin</p>
+      </div>
+
+      <div class="admin-live-status">
+        <span class="live-dot"></span>
+        <span>Polling: <strong id="lastUpdatedTime">--:--:--</strong></span>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="/admin/dashboard.html">Dashboard Monitor</a>
+        <a href="/admin/users.html" class="active">Users Table</a>
+        <a href="/admin/login-logs.html">Login Logs Audit</a>
+        <a href="/admin/trips.html">Trips Inventory</a>
+        <a href="/admin/bookings.html">Bookings Stream</a>
+      </nav>
+
+      <div class="admin-footer">
+        <div style="margin-bottom: 8px; color: #f1f5f9; font-weight: 600;" id="adminUserDisplay">Administrator</div>
+        <a href="/index.html">&larr; Return to Booking Site</a>
+        <a href="#" id="adminLogoutBtn" style="color: #f87171;">Log out</a>
+      </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="admin-main">
+
+      <div class="admin-header">
+        <div class="admin-title-area">
+          <h1>Users Database Table</h1>
+          <p>Direct view of registered accounts in <code>users</code> table (passwords are safely hashed with bcrypt)</p>
+        </div>
+        <div class="admin-meta">
+          <button id="manualRefreshBtn" class="btn btn-secondary btn-sm">Refresh Now</button>
+        </div>
+      </div>
+
+      <!-- Controls & Search Bar -->
+      <div class="card" style="padding: 14px 18px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <input type="text" id="searchInput" placeholder="Search by name or email..." style="width: 240px; padding: 6px 10px;">
+            <select id="sortSelect" style="width: 200px; padding: 6px 10px;">
+              <option value="created_at_desc">Joined: Newest First</option>
+              <option value="created_at_asc">Joined: Oldest First</option>
+              <option value="name_asc">Name: A &rarr; Z</option>
+              <option value="name_desc">Name: Z &rarr; A</option>
+              <option value="email_asc">Email: A &rarr; Z</option>
+            </select>
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted);" id="userStatsText">
+            Loading total users...
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Table Card -->
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 80px;">User ID</th>
+                <th>Full Name</th>
+                <th>Email Address</th>
+                <th style="width: 100px;">Role</th>
+                <th style="width: 120px;">Bookings Made</th>
+                <th style="width: 170px;">Registered At</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                  Polling users table...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-bar" style="padding: 12px 18px; border-top: 1px solid var(--border);">
+          <span id="pageInfoText">Page 1 of 1</span>
+          <div class="pagination-actions">
+            <button id="prevPageBtn" class="btn btn-secondary btn-sm" disabled>&larr; Previous</button>
+            <button id="nextPageBtn" class="btn btn-secondary btn-sm" disabled>Next &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/admin_common.js"></script>
+  <script src="/js/admin_users.js"></script>
+</body>
+</html>

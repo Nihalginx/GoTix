@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Trips - Ticket Booking</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .search-layout {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    .trip-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .trip-card:hover {
+      border-color: #94a3b8;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .trip-info-left {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+    .trip-operator {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .trip-route {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-top: 6px;
+    }
+    .trip-point {
+      display: flex;
+      flex-direction: column;
+    }
+    .trip-time {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .trip-city {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .trip-duration-indicator {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .trip-line {
+      width: 80px;
+      height: 1px;
+      background: var(--border-dark);
+      margin: 3px 0;
+      position: relative;
+    }
+    .trip-line::after {
+      content: "▶";
+      position: absolute;
+      right: -2px;
+      top: -6px;
+      font-size: 9px;
+      color: var(--border-dark);
+    }
+    .trip-pricing-right {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      min-width: 140px;
+      margin-left: 20px;
+    }
+    .trip-price {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .seats-pill {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .seats-pill.low {
+      color: var(--failed-text);
+      font-weight: 700;
+    }
+    .amenities-bar {
+      display: flex;
+      gap: 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+    .amenity-tag {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+    .date-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .date-wrapper input[type="date"] {
+      padding-right: 36px;
+      cursor: pointer;
+    }
+    .calendar-trigger-btn {
+      position: absolute;
+      right: 8px;
+      background: none;
+      border: none;
+      font-size: 15px;
+      cursor: pointer;
+      padding: 4px;
+      color: #475569;
+    }
+    @media (max-width: 840px) {
+      .search-layout {
+        grid-template-columns: 1fr;
+      }
+      .trip-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .trip-pricing-right {
+        align-items: flex-start;
+        width: 100%;
+        border-top: 1px solid var(--border);
+        padding-top: 10px;
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="site-header">
+    <a href="/index.html" class="brand">
+      Ticket Booking
+    </a>
+    <nav class="site-nav">
+      <a href="/index.html">Book Transport</a>
+      <a href="/search.html" class="active">Explore Trips</a>
+      <a href="/my-bookings.html">My Bookings</a>
+      <div class="nav-auth" id="navAuth">
+        <!-- Injected dynamically by api.js -->
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- Active Search Bar / Criteria -->
+    <div class="card" style="padding: 14px 18px; margin-bottom: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div>
+          <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600;" id="modeBreadcrumb">Active Flight Corridors</span>
+          <h1 style="font-size: 17px; font-weight: 700; margin-top: 2px;" id="searchHeaderTitle">Searching Routes</h1>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <input type="text" id="quickOrigin" placeholder="From (e.g. Delhi)..." style="width: 150px; padding: 6px 8px; font-size: 12px;">
+          <input type="text" id="quickDestination" placeholder="To (e.g. London)..." style="width: 150px; padding: 6px 8px; font-size: 12px;">
+          <button id="quickSearchBtn" class="btn btn-secondary btn-sm">Filter</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2-Column Search Layout -->
+    <div class="search-layout">
+
+      <!-- Left Column: Filters -->
+      <aside class="card">
+        <h2 class="card-title" style="margin-bottom: 12px; font-size: 14px;">Filter & Preferences</h2>
+
+        <form id="filterForm">
+          <!-- Transport Type Filter -->
+          <div class="form-group">
+            <label for="filterType">Transport Mode</label>
+            <select id="filterType">
+              <option value="flight">Flights (Domestic & International)</option>
+              <option value="train">Trains (IRCTC Vande Bharat / Rajdhani)</option>
+              <option value="bus">Buses (Volvo / Electric Sleeper)</option>
+              <option value="cab">Cabs (Ola / Uber / BluSmart EV)</option>
+              <option value="bike">Bikes & EV (Yulu / Rentals)</option>
+            </select>
+          </div>
+
+          <!-- Date Picker with Interactive Calendar Button -->
+          <div class="form-group">
+            <label for="filterDate">Travel Date</label>
+            <div class="date-wrapper">
+              <input type="date" id="filterDate" title="Select travel date">
+              <button type="button" class="calendar-trigger-btn" id="filterCalBtn">📅</button>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 3px;" id="filterDateFriendly">
+              Select date
+            </div>
+          </div>
+
+          <!-- Departure Time of Day Filter -->
+          <div class="form-group">
+            <label for="filterTimeOfDay">Departure Time</label>
+            <select id="filterTimeOfDay">
+              <option value="any">Any Time</option>
+              <option value="morning">Morning (05:00 - 11:59)</option>
+              <option value="afternoon">Afternoon (12:00 - 17:59)</option>
+              <option value="evening">Evening & Night (18:00 - 04:59)</option>
+            </select>
+          </div>
+
+          <!-- Max Price Filter in INR (₹) -->
+          <div class="form-group">
+            <label for="filterMaxPrice">Max Fare in INR (₹)</label>
+            <input type="number" id="filterMaxPrice" placeholder="e.g. 75000" min="0" step="500">
+          </div>
+
+          <!-- Sort Order -->
+          <div class="form-group">
+            <label for="filterSort">Sort Results</label>
+            <select id="filterSort">
+              <option value="departure_asc">Departure: Earliest First</option>
+              <option value="price_asc">Price: Lowest First</option>
+              <option value="price_desc">Price: Highest First</option>
+              <option value="seats_desc">Availability: Most Seats First</option>
+            </select>
+          </div>
+
+          <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px;">
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Apply Filters</button>
+            <button type="button" class="btn btn-secondary" id="resetFiltersBtn" style="width: 100%;">Reset All</button>
+          </div>
+        </form>
+      </aside>
+
+      <!-- Right Column: Trip List -->
+      <section>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="font-size: 13px; color: var(--text-muted);" id="resultsCount">Loading trips...</span>
+        </div>
+
+        <!-- Validation / Alert Banner -->
+        <div id="searchAlertBanner" class="form-msg" style="margin-bottom: 12px;"></div>
+
+        <!-- Trips Container -->
+        <div id="tripsList">
+          <div class="card" style="text-align: center; color: var(--text-muted); padding: 30px;">
+            Searching schedules...
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Plain Clean Footer -->
+  <footer class="site-footer">
+    <div>
+      <strong>Ticket Booking</strong> &copy; 2026. Hand-built transport ticketing system with SQLite & FastAPI.
+    </div>
+    <div>
+      <a href="/admin/dashboard.html">Admin Monitor</a> &bull;
+      <a href="/login.html">Login</a>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/search.js"></script>
+</body>
+</html>

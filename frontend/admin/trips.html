@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trips Inventory - Ticket Booking Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="admin-wrapper">
+
+    <!-- Shared Left Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <h2>Ticket Booking</h2>
+        <p>Database Monitor & Admin</p>
+      </div>
+
+      <div class="admin-live-status">
+        <span class="live-dot"></span>
+        <span>Polling: <strong id="lastUpdatedTime">--:--:--</strong></span>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="/admin/dashboard.html">Dashboard Monitor</a>
+        <a href="/admin/users.html">Users Table</a>
+        <a href="/admin/login-logs.html">Login Logs Audit</a>
+        <a href="/admin/trips.html" class="active">Trips Inventory</a>
+        <a href="/admin/bookings.html">Bookings Stream</a>
+      </nav>
+
+      <div class="admin-footer">
+        <div style="margin-bottom: 8px; color: #f1f5f9; font-weight: 600;" id="adminUserDisplay">Administrator</div>
+        <a href="/index.html">&larr; Return to Booking Site</a>
+        <a href="#" id="adminLogoutBtn" style="color: #f87171;">Log out</a>
+      </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="admin-main">
+
+      <div class="admin-header">
+        <div class="admin-title-area">
+          <h1>Trips & Inventory Table</h1>
+          <p>Real-time monitor of <code>trips</code> table seats, pricing and operational status</p>
+        </div>
+        <div class="admin-meta">
+          <button id="syncApiBtn" class="btn btn-primary btn-sm">Sync from API</button>
+          <button id="manualRefreshBtn" class="btn btn-secondary btn-sm">Refresh Now</button>
+        </div>
+      </div>
+
+      <!-- Sync Result Banner -->
+      <div id="syncResultBanner" class="form-msg" style="margin-bottom: 16px;"></div>
+
+      <!-- Controls & Filter Bar -->
+      <div class="card" style="padding: 14px 18px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <!-- Transport Type Filter (No AllModes) -->
+            <select id="typeFilter" style="width: 170px; padding: 6px 10px;">
+              <option value="">All Transport Modes</option>
+              <option value="flight">Flights (Domestic/Intl)</option>
+              <option value="train">Trains (IRCTC)</option>
+              <option value="bus">Buses (Volvo/EV)</option>
+              <option value="cab">Cabs (Ola/Uber)</option>
+              <option value="bike">Bikes (Yulu/Rapido)</option>
+            </select>
+
+            <!-- Search Operator or Route -->
+            <input type="text" id="searchInput" placeholder="Search operator, origin, or destination..." style="width: 280px; padding: 6px 10px;">
+
+            <!-- Sort -->
+            <select id="sortSelect" style="width: 160px; padding: 6px 10px;">
+              <option value="id_asc">ID: Lowest First</option>
+              <option value="departure_asc">Departure: Earliest</option>
+              <option value="price_asc">Fare: Lowest</option>
+              <option value="price_desc">Fare: Highest</option>
+              <option value="seats_asc">Seats: Fewest Left</option>
+            </select>
+          </div>
+
+          <div style="font-size: 12px; color: var(--text-muted);" id="tripsStatsText">
+            Loading trips count...
+          </div>
+        </div>
+      </div>
+
+      <!-- Trips Table Card -->
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 70px;">Trip ID</th>
+                <th style="width: 90px;">Type</th>
+                <th>Operator & Service</th>
+                <th>Route (Origin &rarr; Destination)</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Fare (₹)</th>
+                <th>Available / Total</th>
+                <th style="width: 90px;">Occupancy</th>
+              </tr>
+            </thead>
+            <tbody id="tripsTableBody">
+              <tr>
+                <td colspan="9" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                  Polling trips table...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-bar" style="padding: 12px 18px; border-top: 1px solid var(--border);">
+          <span id="pageInfoText">Page 1 of 1</span>
+          <div class="pagination-actions">
+            <button id="prevPageBtn" class="btn btn-secondary btn-sm" disabled>&larr; Previous</button>
+            <button id="nextPageBtn" class="btn btn-secondary btn-sm" disabled>Next &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/admin_common.js"></script>
+  <script src="/js/admin_trips.js"></script>
+</body>
+</html>

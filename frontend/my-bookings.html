@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Bookings - Ticket Booking</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="site-header">
+    <a href="/index.html" class="brand">
+      Ticket Booking
+    </a>
+    <nav class="site-nav">
+      <a href="/index.html">Book Transport</a>
+      <a href="/search.html">Explore Trips</a>
+      <a href="/my-bookings.html" class="active">My Bookings</a>
+      <div class="nav-auth" id="navAuth">
+        <!-- Injected dynamically by api.js -->
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <div class="card-header" style="margin-top: 10px;">
+      <div>
+        <h1 class="card-title" style="font-size: 18px;">My Booked Journeys</h1>
+        <p class="card-subtitle">Manage your travel reservations and real-time ticket statuses.</p>
+      </div>
+      <a href="/search.html" class="btn btn-primary btn-sm">+ Book Another Trip</a>
+    </div>
+
+    <!-- Alert / Feedback Box -->
+    <div id="bookingActionAlert" class="form-msg"></div>
+
+    <!-- Bookings Table Card -->
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width: 90px;">Booking ID</th>
+              <th>Transport & Operator</th>
+              <th>Route</th>
+              <th>Travel Time</th>
+              <th>Passengers</th>
+              <th>Seats</th>
+              <th>Total Fare (₹)</th>
+              <th>Status</th>
+              <th style="text-align: right; min-width: 150px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="myBookingsTable">
+            <tr>
+              <td colspan="9" style="text-align: center; padding: 30px; color: var(--text-muted);">
+                Loading your bookings...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Demo Explanatory Note -->
+    <div class="card" style="background-color: #f8fafc; font-size: 12px; color: var(--text-muted);">
+      <strong>Viva / Examiner Note:</strong>
+      When you cancel a booking here, the database executes an atomic transaction that sets <code>bookings.status = 'cancelled'</code>
+      and immediately returns the seats to <code>trips.seats_available</code>. You can see this live on the Admin Database Monitor.
+    </div>
+
+  </main>
+
+  <!-- Plain Clean Footer -->
+  <footer class="site-footer">
+    <div>
+      <strong>Ticket Booking</strong> &copy; 2026. Hand-built transport ticketing system with SQLite & FastAPI.
+    </div>
+    <div>
+      <a href="/admin/dashboard.html">Admin Monitor</a>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/my_bookings.js"></script>
+</body>
+</html>

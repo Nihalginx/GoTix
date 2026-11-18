@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Monitor - Ticket Booking Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="admin-wrapper">
+
+    <!-- Shared Left Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <h2>Ticket Booking</h2>
+        <p>Database Monitor & Admin</p>
+      </div>
+
+      <div class="admin-live-status">
+        <span class="live-dot"></span>
+        <span>Polling: <strong id="lastUpdatedTime">--:--:--</strong></span>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="/admin/dashboard.html" class="active">Dashboard Monitor</a>
+        <a href="/admin/users.html">Users Table</a>
+        <a href="/admin/login-logs.html">Login Logs Audit</a>
+        <a href="/admin/trips.html">Trips Inventory</a>
+        <a href="/admin/bookings.html">Bookings Stream</a>
+      </nav>
+
+      <div class="admin-footer">
+        <div style="margin-bottom: 8px; color: #f1f5f9; font-weight: 600;" id="adminUserDisplay">Administrator</div>
+        <a href="/index.html">&larr; Return to Booking Site</a>
+        <a href="#" id="adminLogoutBtn" style="color: #f87171;">Log out</a>
+      </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="admin-main">
+
+      <!-- Header with live polling badge -->
+      <div class="admin-header">
+        <div class="admin-title-area">
+          <h1>Database Monitor Dashboard</h1>
+          <p>Real-time aggregates across SQLite database tables (refreshes every 5 seconds)</p>
+        </div>
+        <div class="admin-meta">
+          <span class="badge badge-type" style="font-size: 11px;">SQLite 3 Engine</span>
+          <button id="manualRefreshBtn" class="btn btn-secondary btn-sm">Refresh Now</button>
+        </div>
+      </div>
+
+      <!-- 4 Summary Stat Cards -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Users</div>
+          <div class="stat-value" id="statUsers">-</div>
+          <div class="stat-sub">From <code>users</code> table</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Total Bookings</div>
+          <div class="stat-value" id="statBookings">-</div>
+          <div class="stat-sub">From <code>bookings</code> table</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Total Revenue (₹)</div>
+          <div class="stat-value" id="statRevenue" style="color: var(--accent);">₹0.00</div>
+          <div class="stat-sub">Confirmed ticket sales</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Failed Logins Today</div>
+          <div class="stat-value" id="statFailedLogins" style="color: var(--failed-text);">-</div>
+          <div class="stat-sub">From <code>login_logs</code> table</div>
+        </div>
+      </div>
+
+      <!-- Bookings per Transport Type Table -->
+      <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 24px;">
+        <div style="padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+          <h2 class="card-title" style="font-size: 14px;">Bookings & Revenue per Transport Type</h2>
+          <span class="card-subtitle">Aggregated by <code>trips.transport_type</code></span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Transport Type</th>
+                <th>Active Trips in Catalog</th>
+                <th>Total Bookings</th>
+                <th>Revenue Generated (₹)</th>
+              </tr>
+            </thead>
+            <tbody id="transportBreakdownTable">
+              <tr>
+                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                  Loading breakdown...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recent Combined Activity Feed Table -->
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <div style="padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+          <h2 class="card-title" style="font-size: 14px;">Live Activity Stream (Logins & Bookings Combined)</h2>
+          <span class="card-subtitle">Latest 20 audit events ordered chronologically</span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 130px;">Event Action</th>
+                <th>Actor / Email</th>
+                <th>Details</th>
+                <th style="width: 100px;">Status</th>
+                <th style="width: 160px;">Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="recentActivityTable">
+              <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                  Polling live activity...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/admin_common.js"></script>
+  <script src="/js/admin_dashboard.js"></script>
+</body>
+</html>

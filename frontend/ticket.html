@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boarding Pass & Ticket - Ticket Booking</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .ticket-wrapper {
+      max-width: 640px;
+      margin: 20px auto;
+    }
+    .ticket-card {
+      background: #ffffff;
+      border: 1px solid var(--border-dark);
+      border-radius: 4px;
+      padding: 0;
+      overflow: hidden;
+    }
+    .ticket-header {
+      background-color: #0f172a;
+      color: #ffffff;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ticket-body {
+      padding: 24px;
+    }
+    .ticket-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      row-gap: 16px;
+      column-gap: 24px;
+      margin: 18px 0;
+    }
+    .ticket-field-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+    }
+    .ticket-field-val {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-top: 2px;
+    }
+    .ticket-stub {
+      background-color: #f8fafc;
+      border-top: 1px dashed var(--border-dark);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .ticket-barcode-mock {
+      font-family: monospace;
+      letter-spacing: 3px;
+      font-weight: 700;
+      color: #334155;
+      font-size: 14px;
+    }
+    .action-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="site-header">
+    <a href="/index.html" class="brand">
+      Ticket Booking
+    </a>
+    <nav class="site-nav">
+      <a href="/index.html">Book Transport</a>
+      <a href="/search.html">Explore Trips</a>
+      <a href="/my-bookings.html">My Bookings</a>
+      <div class="nav-auth" id="navAuth">
+        <!-- Injected dynamically by api.js -->
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    <div class="ticket-wrapper">
+
+      <div style="text-align: center; margin-bottom: 16px;">
+        <span class="badge badge-success" style="font-size: 12px; padding: 4px 10px;">Booking Confirmed & Recorded</span>
+        <h1 style="font-size: 20px; font-weight: 700; margin-top: 6px;">Travel Ticket & E-Pass</h1>
+        <p style="font-size: 12px; color: var(--text-muted);">Please present this ticket or booking reference at check-in or boarding.</p>
+      </div>
+
+      <!-- Printable Ticket Card -->
+      <div class="ticket-card" id="ticketContent">
+        <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+          Loading ticket details...
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-row no-print">
+        <a href="/my-bookings.html" class="btn btn-secondary">View My Bookings</a>
+        <div style="display: flex; gap: 8px;">
+          <a href="/admin/bookings.html" class="btn btn-secondary" title="View row in Admin Monitor">Observe in Monitor</a>
+          <button id="printBtn" class="btn btn-primary">Print Ticket</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Plain Clean Footer -->
+  <footer class="site-footer">
+    <div>
+      <strong>Ticket Booking</strong> &copy; 2026. Hand-built transport ticketing system with SQLite & FastAPI.
+    </div>
+    <div>
+      <a href="/admin/dashboard.html">Admin Monitor</a>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/ticket.js"></script>
+</body>
+</html>

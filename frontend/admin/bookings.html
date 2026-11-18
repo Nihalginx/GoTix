@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Bookings Stream - Ticket Booking Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="admin-wrapper">
+
+    <!-- Shared Left Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <h2>Ticket Booking</h2>
+        <p>Database Monitor & Admin</p>
+      </div>
+
+      <div class="admin-live-status">
+        <span class="live-dot"></span>
+        <span>Polling: <strong id="lastUpdatedTime">--:--:--</strong></span>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="/admin/dashboard.html">Dashboard Monitor</a>
+        <a href="/admin/users.html">Users Table</a>
+        <a href="/admin/login-logs.html">Login Logs Audit</a>
+        <a href="/admin/trips.html">Trips Inventory</a>
+        <a href="/admin/bookings.html" class="active">Bookings Stream</a>
+      </nav>
+
+      <div class="admin-footer">
+        <div style="margin-bottom: 8px; color: #f1f5f9; font-weight: 600;" id="adminUserDisplay">Administrator</div>
+        <a href="/index.html">&larr; Return to Booking Site</a>
+        <a href="#" id="adminLogoutBtn" style="color: #f87171;">Log out</a>
+      </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="admin-main">
+
+      <div class="admin-header">
+        <div class="admin-title-area">
+          <h1>Live Bookings Monitor</h1>
+          <p>Real-time monitor of <code>bookings</code> table. Newly created bookings are automatically highlighted.</p>
+        </div>
+        <div class="admin-meta">
+          <span style="font-size: 11px; color: #b45309; background: #fef3c7; border: 1px solid #fde68a; padding: 2px 8px; border-radius: 3px;">
+            &bull; Yellow flash = newly added database row
+          </span>
+          <button id="manualRefreshBtn" class="btn btn-secondary btn-sm">Refresh Now</button>
+        </div>
+      </div>
+
+      <!-- Controls & Filter Bar -->
+      <div class="card" style="padding: 14px 18px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <!-- Status Filter -->
+            <select id="statusFilter" style="width: 160px; padding: 6px 10px;">
+              <option value="">All Statuses</option>
+              <option value="confirmed">Confirmed Only</option>
+              <option value="cancelled">Cancelled Only</option>
+            </select>
+
+            <!-- Search -->
+            <input type="text" id="searchInput" placeholder="Search passenger, user, or route..." style="width: 260px; padding: 6px 10px;">
+
+            <!-- Sort -->
+            <select id="sortSelect" style="width: 170px; padding: 6px 10px;">
+              <option value="booked_desc">Booked: Newest First</option>
+              <option value="booked_asc">Booked: Oldest First</option>
+              <option value="price_desc">Fare: Highest First</option>
+              <option value="price_asc">Fare: Lowest First</option>
+            </select>
+          </div>
+
+          <div style="font-size: 12px; color: var(--text-muted);" id="bookingsStatsText">
+            Loading bookings count...
+          </div>
+        </div>
+      </div>
+
+      <!-- Bookings Table Card -->
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 90px;">Booking ID</th>
+                <th>User Account</th>
+                <th>Trip & Route</th>
+                <th>Passenger Name(s)</th>
+                <th style="width: 70px;">Seats</th>
+                <th style="width: 110px;">Total Fare (₹)</th>
+                <th style="width: 100px;">Status</th>
+                <th style="width: 160px;">Booked At</th>
+              </tr>
+            </thead>
+            <tbody id="bookingsTableBody">
+              <tr>
+                <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                  Polling bookings table...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-bar" style="padding: 12px 18px; border-top: 1px solid var(--border);">
+          <span id="pageInfoText">Page 1 of 1</span>
+          <div class="pagination-actions">
+            <button id="prevPageBtn" class="btn btn-secondary btn-sm" disabled>&larr; Previous</button>
+            <button id="nextPageBtn" class="btn btn-secondary btn-sm" disabled>Next &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/admin_common.js"></script>
+  <script src="/js/admin_bookings.js"></script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ticket Booking - Flights, Trains, Buses, Cabs & Bikes</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .quick-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .city-chip {
+      background: #f1f5f9;
+      border: 1px solid var(--border-dark);
+      border-radius: 12px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-main);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .city-chip:hover {
+      background: #e2e8f0;
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .date-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .date-wrapper input[type="date"] {
+      padding-right: 38px;
+      cursor: pointer;
+    }
+    .calendar-trigger-btn {
+      position: absolute;
+      right: 8px;
+      background: none;
+      border: none;
+      font-size: 15px;
+      cursor: pointer;
+      padding: 4px;
+      color: #475569;
+    }
+    .promo-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .promo-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 16px;
+    }
+    .promo-card h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+    .promo-card p {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .mode-badge-indicator {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    @media (max-width: 768px) {
+      .promo-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="site-header">
+    <a href="/index.html" class="brand">
+      Ticket Booking
+    </a>
+    <nav class="site-nav">
+      <a href="/index.html" class="active">Book Transport</a>
+      <a href="/search.html">Explore Trips</a>
+      <a href="/my-bookings.html">My Bookings</a>
+      <div class="nav-auth" id="navAuth">
+        <!-- Injected dynamically by api.js -->
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- Search Box Card -->
+    <section class="card" style="margin-top: 10px;">
+      <div class="card-header">
+        <div>
+          <span class="mode-badge-indicator" id="modeBadge">FLIGHTS (DOMESTIC & INTERNATIONAL)</span>
+          <h1 class="card-title" id="modeHeading" style="font-size: 17px;">Search Flights from any Indian Airport to Worldwide Destinations</h1>
+          <p class="card-subtitle" id="modeSubtitle">Real schedules for Air India, IndiGo, British Airways, Emirates, and Singapore Airlines.</p>
+        </div>
+      </div>
+
+      <!-- Transport Type Tabs -->
+      <div class="tabs" id="transportTabs">
+        <button type="button" class="tab-btn active" data-type="flight">Flights</button>
+        <button type="button" class="tab-btn" data-type="train">Trains (IRCTC)</button>
+        <button type="button" class="tab-btn" data-type="bus">Buses (Volvo / EV)</button>
+        <button type="button" class="tab-btn" data-type="cab">Cabs</button>
+        <button type="button" class="tab-btn" data-type="bike">Bikes & EV</button>
+      </div>
+
+      <!-- Dynamic Search Form -->
+      <form id="searchForm">
+        <div class="form-row">
+
+          <!-- Dynamic Field 1 (From) -->
+          <div class="form-group">
+            <label for="fromInput" id="fromLabel">From (Airport / City)</label>
+            <input type="text" id="fromInput" placeholder="e.g. Delhi (DEL), Mumbai (BOM), Bengaluru (BLR)" autocomplete="off" value="Delhi">
+            <div class="quick-chips" id="fromChips">
+              <!-- Dynamically populated based on mode -->
+            </div>
+          </div>
+
+          <!-- Dynamic Field 2 (To) -->
+          <div class="form-group">
+            <label for="toInput" id="toLabel">To (Airport / Destination)</label>
+            <input type="text" id="toInput" placeholder="e.g. London (LHR), Dubai (DXB), Singapore, Goa" autocomplete="off" value="London">
+            <div class="quick-chips" id="toChips">
+              <!-- Dynamically populated based on mode -->
+            </div>
+          </div>
+
+          <!-- Departure Date with Interactive Calendar Picker -->
+          <div class="form-group">
+            <label for="dateInput" id="dateLabel">Departure Date</label>
+            <div class="date-wrapper">
+              <input type="date" id="dateInput" required title="Click to open calendar">
+              <button type="button" class="calendar-trigger-btn" id="calendarBtn" title="Open Calendar">📅</button>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;" id="selectedDateFriendly">
+              Selected: Today
+            </div>
+          </div>
+
+          <!-- Dynamic Field 4 (Class / Travellers / Vehicle Type) -->
+          <div class="form-group">
+            <label for="optionInput" id="optionLabel">Cabin Class & Travellers</label>
+            <select id="optionInput">
+              <option value="1">1 Passenger (Economy)</option>
+              <option value="2">2 Passengers (Economy)</option>
+              <option value="3">3 Passengers (Economy)</option>
+              <option value="1_biz">1 Passenger (Business Class)</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 8px;">
+          <div style="font-size: 12px; color: var(--text-muted);" id="modeFooterNote">
+            ✈️ Non-stop and connecting flight routes available from all Indian airports.
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button type="reset" class="btn btn-secondary" id="resetBtn">Reset</button>
+            <button type="submit" class="btn btn-primary" id="searchSubmitBtn" style="padding: 8px 24px;">Search Flights</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Popular Routes Section -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">Popular Routes & Fares</h2>
+          <p class="card-subtitle">Real schedules with guaranteed live seat status in Indian Rupees (₹)</p>
+        </div>
+        <a href="/search.html" class="btn btn-secondary btn-sm">Explore All Routes</a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width: 90px;">Mode</th>
+              <th>Route</th>
+              <th>Operators & Features</th>
+              <th>Duration</th>
+              <th>Starting Fare</th>
+              <th style="width: 130px; text-align: right;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="popularRoutesTable">
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                Loading popular routes...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Information & Features Strip -->
+    <div class="promo-strip">
+      <div class="promo-card">
+        <h3>🇮🇳 Comprehensive Indian & Global Transit</h3>
+        <p>Flights from any Indian hub to domestic or global destinations (London, Dubai, Singapore, New York), plus domestic IRCTC Vande Bharat trains, KSRTC Volvo, and BluSmart EV cabs.</p>
+      </div>
+      <div class="promo-card">
+        <h3>⚡ Real-Time SQLite Sync</h3>
+        <p>Every booking or cancellation updates <code>trips.seats_available</code> inside an atomic database transaction. Zero double-booking risk.</p>
+      </div>
+      <div class="promo-card">
+        <h3>🎫 Instant Ticket & Boarding Pass</h3>
+        <p>Receive an official printable boarding pass and reference number instantly upon checkout. Cancel anytime with automated seat restoration.</p>
+      </div>
+    </div>
+
+    <!-- Database Monitor Notice Card -->
+    <section class="card" style="background-color: #f1f5f9; border-color: #cbd5e1; margin-top: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h3 style="font-size: 14px; font-weight: 700; color: #0f172a;">Admin Database Monitor</h3>
+          <p style="font-size: 12px; color: #475569; margin-top: 3px;">
+            Inspect live tables, audit logs, revenue metrics, and auto-highlighted bookings updating every 5 seconds.
+          </p>
+        </div>
+        <a href="/admin/dashboard.html" class="btn btn-primary btn-sm">Open Admin Monitor</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Plain Clean Footer -->
+  <footer class="site-footer">
+    <div>
+      <strong>Ticket Booking</strong> &copy; 2026. Hand-built transport ticketing system with SQLite & FastAPI.
+    </div>
+    <div>
+      <a href="/admin/dashboard.html">Admin Monitor</a> &bull;
+      <a href="/login.html">Login</a>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/home.js"></script>
+</body>
+</html>
